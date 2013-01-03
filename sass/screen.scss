@@ -1,0 +1,136 @@
+@import "compass/css3";
+
+* {
+	@include box-sizing(border-box);
+}
+
+html,
+body,
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+
+/* @group mixins */
+	@mixin respond-to($query) {
+		@media only screen and #{$query}  {
+			@content
+		}
+	}
+
+	@mixin diamond-grid-breakpoint($query, $maxWidth, $n, $maxRow) {
+		@include respond-to(#{$query}) {
+			.csstransforms & {
+				max-width: $maxWidth;
+
+				> li {
+					&:nth-child(#{$n}n+#{$maxRow + 1}) {
+						margin-left: 135px;
+					}
+
+					&:nth-child(#{$n}n+#{$maxRow}) {
+						margin-right: 0;
+					}
+
+					&:nth-child(n+#{$maxRow}) {
+						margin-top: -55px;
+					}
+				}
+			}	
+		}
+	}
+/* @end */
+
+/* @group diamonds */
+	$diamondSize: 190px;
+	$belowDiamondSize: 160px;
+	$diamondQuery1: '(min-width: 1348px)';
+	$diamondQuery2: '(max-width: 1347px) and (min-width: 1078px)';
+	$diamondQuery3: '(max-width: 1077px) and (min-width: 808px)';
+	$diamondQuery4: '(max-width: 807px) and (min-width: 538px)';
+	$belowDiamond: '(max-width: 537px)';
+
+	.diamonds {
+		font: Helvetica, Arial, sans-serif;
+		font-size: 0;
+		margin: 40px auto;
+
+		@include diamond-grid-breakpoint($query: $diamondQuery1, $maxWidth: 1270px, $n: 9, $maxRow: 5);
+		@include diamond-grid-breakpoint($query: $diamondQuery2, $maxWidth: 1000px, $n: 7, $maxRow: 4);
+		@include diamond-grid-breakpoint($query: $diamondQuery3, $maxWidth: 730px, $n: 5, $maxRow: 3);
+		@include diamond-grid-breakpoint($query: $diamondQuery4, $maxWidth: 460px, $n: 3, $maxRow: 2);
+
+		.csstransforms & {
+			padding: 39px 0;
+
+			@include respond-to($belowDiamond) {
+				padding: 0;
+				text-align: center;
+			}
+		}
+
+		.no-csstransforms & {
+			max-width: 1060px;
+		}
+
+		> li {
+			display: inline-block;
+			font-size: 18px;
+			margin-right: 80px;
+
+			@include respond-to($belowDiamond) {
+				margin-right: 0;
+				width: $belowDiamondSize;
+			}
+
+			.no-csstransforms & {
+				margin: 0 20px 20px 0;
+			}
+		}
+
+		.diamond {
+			@include backface-visibility(hidden);
+			background: #f4f4f4;
+			@include box-shadow(0 0 0 1px #ccc);
+			color: #000;
+			display: block;
+			height: $diamondSize;
+			overflow: hidden;
+			@include perspective(1000);
+			position: relative;
+			text-decoration: none;
+			width: $diamondSize;
+
+			.csstransforms & {
+				overflow: hidden;
+				@include rotate(-45deg);
+
+				@include respond-to($belowDiamond) {
+					height: $belowDiamondSize;
+					@include rotate(0);
+					width: $belowDiamondSize;
+				}
+			}
+		}
+
+		.content {
+			display: table-cell;
+			height: $diamondSize;
+			padding: 0 10px;
+			@include rotate(45deg);
+			text-align: center;
+			vertical-align: middle;
+			width: $diamondSize;
+
+			@include respond-to($belowDiamond) {
+				.csstransforms & {
+					height: $belowDiamondSize;
+					@include rotate(0);
+					width: $belowDiamondSize;
+				}
+			}
+		}
+	}
+/* @end */
